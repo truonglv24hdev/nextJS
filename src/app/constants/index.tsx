@@ -1,16 +1,43 @@
-import { IconPlay, IconExplore } from "@/components/icon";
+import {
+  IconPlay,
+  IconExplore,
+  IconStudy,
+  IconUser,
+  IconComment,
+  IconOrder,
+} from "@/components/icon";
 import React from "react";
 import { MenuItems } from "../types";
 
 export const menuItems: MenuItems[] = [
   {
     url: "/",
-    title: "Khu vuc hoc tap",
+    title: "Khám phá",
     icon: <IconPlay className="size-5" />,
   },
   {
-    url: "/explore",
-    title: "Khu vuc kham pha",
+    url: "/study",
+    title: "Khu vuc học tập",
+    icon: <IconStudy className="size-5" />,
+  },
+  {
+    url: "/manage/course",
+    title: "Quản lí khóa học",
     icon: <IconExplore className="size-5" />,
+  },
+  {
+    url: "/manage/member",
+    title: "Quản lí thành viên",
+    icon: <IconUser className="size-5" />,
+  },
+  {
+    url: "/manage/comment",
+    title: "Quản lí bình luận",
+    icon: <IconComment className="size-5" />,
+  },
+  {
+    url: "/manage/order",
+    title: "Quản lí đơn hàng",
+    icon: <IconOrder className="size-5" />,
   },
 ];

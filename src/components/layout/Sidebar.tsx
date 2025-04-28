@@ -3,12 +3,14 @@ import React from "react";
 import { menuItems } from "@/app/constants";
 import ActiveLink from "../common/ActiveLink";
 import { MenuItems } from "@/app/types";
+import { UserButton } from "@clerk/nextjs";
+import { ModeToggle } from "../common/ModeToggle";
 
 const Sidebar = () => {
   return (
-    <div className="p-5 border-r border-r-gray-200">
+    <div className="p-5 border-r border-r-gray-200 bg-white flex flex-col">
       <Link href="/" className="font-bold text-3xl inline-block mb-5">
-        24hDev
+        Education
       </Link>
       <ul className="flex flex-col gap-2">
         {menuItems.map((menu) => (
@@ -20,6 +22,10 @@ const Sidebar = () => {
           ></MenuItem>
         ))}
       </ul>
+      <div className="mt-auto flex items-center justify-end gap-5">
+        <ModeToggle></ModeToggle>
+        <UserButton />
+      </div>
     </div>
   );
 };
