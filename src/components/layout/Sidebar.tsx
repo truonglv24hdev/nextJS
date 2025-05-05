@@ -1,12 +1,15 @@
+"use client";
 import Link from "next/link";
 import React from "react";
 import { menuItems } from "@/app/constants";
 import ActiveLink from "../common/ActiveLink";
 import { MenuItems } from "@/app/types";
-import { UserButton } from "@clerk/nextjs";
+import { useAuth, UserButton } from "@clerk/nextjs";
 import { ModeToggle } from "../common/ModeToggle";
+import { IconUser } from "../icon";
 
 const Sidebar = () => {
+  const { userId } = useAuth();
   return (
     <div className="p-5 border-r border-r-gray-200 bg-white flex flex-col">
       <Link href="/" className="font-bold text-3xl inline-block mb-5">
@@ -24,7 +27,16 @@ const Sidebar = () => {
       </ul>
       <div className="mt-auto flex items-center justify-end gap-5">
         <ModeToggle></ModeToggle>
-        <UserButton />
+        {!userId ? (
+          <Link
+            href="/sign-in"
+            className="size-10 rounded-lg bg-primary text-white flex items-center justify-center p-1"
+          >
+            <IconUser />
+          </Link>
+        ) : (
+          <UserButton />
+        )}
       </div>
     </div>
   );

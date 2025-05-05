@@ -1,5 +1,5 @@
+import mongoose, { Document, Schema } from "mongoose";
 import { EUserRole, EUserStatus } from "@/types/enums";
-import { Document, model, models, Schema } from "mongoose";
 
 export interface IUser extends Document {
   clerkId: string;
@@ -12,37 +12,43 @@ export interface IUser extends Document {
   createdAt: Date;
 }
 
-const userSchema = new Schema<IUser>({
-  clerkId: {
-    type: String,
-  },
-  username: {
-    type: String,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  avatar: {
-    type: String,
-  },
-  courses: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Course",
+const userSchema = new Schema<IUser>(
+  {
+    clerkId: {
+      type: String,
     },
-  ],
-  role: {
-    type: String,
-    enum: Object.values(EUserRole),
-    default: EUserRole.USER,
+    username: {
+      type: String,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    avatar: {
+      type: String,
+    },
+    courses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Course",
+      },
+    ],
+    role: {
+      type: String,
+      enum: Object.values(EUserRole),
+      default: EUserRole.USER,
+    },
+    status: {
+      type: String,
+      enum: Object.values(EUserStatus),
+      default: EUserStatus.ACTIVE,
+    },
   },
-  status: {
-    type: String,
-    enum: Object.values(EUserStatus),
-    default: EUserStatus.ACTIVE,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
-const User = models.User || model("user", userSchema)
-export default User
+const User = mongoose.models["user"] || mongoose.model("user", userSchema);
+
+export default User;
