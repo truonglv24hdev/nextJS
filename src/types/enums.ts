@@ -1,3 +1,5 @@
+import { ICourse } from "@/database/course.model";
+
 enum EUserStatus {
   ACTIVE = "ACTIVE",
   UNACTIVE = "UNACTIVE",
@@ -10,6 +12,23 @@ enum EUserRole {
   EXPERT = "EXPERT",
 }
 
+enum ECourseStatus {
+  APPROVED = "APPROVED",
+  PENDING = "PENDING",
+  REJECTED = "REJECTED",
+}
+
+enum ECourseLevels {
+  BEGINNER = "BEGINNER",
+  INTERMEDIATE = "INTERMEDIATE",
+  ADVANCED = "ADVANCED",
+}
+
+enum ELessonType {
+  VIDEO = "VIDEO",
+  TEXT = "INTERMEDIATE",
+}
+
 export type TCreateUserParams = {
   clerkId: string;
   username: string;
@@ -18,4 +37,15 @@ export type TCreateUserParams = {
   avatar?: string;
 };
 
-export { EUserStatus, EUserRole };
+export type TCreateCourseParams = {
+  title: string;
+  slug?: string;
+};
+
+export type TUpdateCourseParams = {
+  slug: string;
+  updateDate: Partial<ICourse>;
+  path?: string;
+};
+
+export { EUserStatus, EUserRole, ECourseStatus, ECourseLevels, ELessonType };

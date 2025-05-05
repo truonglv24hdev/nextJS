@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/common/ThemProvider";
+import { ToastContainer, toast } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {children}
+            <ToastContainer autoClose={2000} hideProgressBar className="text-sm font-medium" position="top-right" />
           </ThemeProvider>
         </body>
       </html>
