@@ -20,10 +20,10 @@ export interface ICourse extends Document {
   info: {
     requirement: string[];
     benefit: string[];
-    qa: {
-      question: string[];
-      answer: string[];
-    }[];
+    qa: [{
+      question: string;
+      answer: string;
+    }];
   };
   lectures: Schema.Types.ObjectId[];
 }

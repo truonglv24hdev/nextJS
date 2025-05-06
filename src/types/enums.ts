@@ -29,6 +29,16 @@ enum ELessonType {
   TEXT = "INTERMEDIATE",
 }
 
+enum RatingStatus {
+  ACTIVE = "ACTIVE",
+  UNACTIVE = "UNACTIVE",
+}
+
+enum CouponType {
+  PERCENT = "PERCENT",
+  AMOUNT = "AMOUNT",
+}
+
 export type TCreateUserParams = {
   clerkId: string;
   username: string;
@@ -44,8 +54,16 @@ export type TCreateCourseParams = {
 
 export type TUpdateCourseParams = {
   slug: string;
-  updateDate: Partial<ICourse>;
+  updateData: Partial<ICourse>;
   path?: string;
 };
 
-export { EUserStatus, EUserRole, ECourseStatus, ECourseLevels, ELessonType };
+export {
+  EUserStatus,
+  EUserRole,
+  ECourseStatus,
+  ECourseLevels,
+  ELessonType,
+  RatingStatus,
+  CouponType,
+};

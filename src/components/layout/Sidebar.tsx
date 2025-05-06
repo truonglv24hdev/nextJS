@@ -11,7 +11,7 @@ import { IconUser } from "../icon";
 const Sidebar = () => {
   const { userId } = useAuth();
   return (
-    <div className="p-5 border-r border-r-gray-200 bg-white flex flex-col">
+    <div className="p-5 border-r border-r-gray-200 bg-white lg:flex flex-col fixed top-0 left-0 bottom-0 w-[300px] ">
       <Link href="/" className="font-bold text-3xl inline-block mb-5">
         Education
       </Link>

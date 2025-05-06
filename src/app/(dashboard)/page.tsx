@@ -1,6 +1,6 @@
 import { CourseGrid } from "@/components/common";
 import CourseItem from "@/components/course/CourseItem";
-import Heading from "@/components/layout/Heading";
+import Heading from "@/components/common/Heading";
 import { getAllCourse } from "@/lib/actions/course.actions";
 import React from "react";
 

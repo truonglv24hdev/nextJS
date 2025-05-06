@@ -8,27 +8,27 @@ import { ICourse } from "@/database/course.model";
 const CourseItem = ({ data }: { data: ICourse }) => {
   const courseInfo = [
     {
-      title: data.view,
+      title: data?.view ?? "0",
       icon: <IconEye className="size-4"></IconEye>,
     },
-    { title: data.rating, icon: <IconStar className="size-4"></IconStar> },
+    { title: data?.rating ?? "5", icon: <IconStar className="size-4"></IconStar> },
     { title: "30h25p", icon: <IconClock className="size-4"></IconClock> },
   ];
   return (
     <div className="bg-white border border-gray-200 p-5 rounded-2xl">
       <Link href={`/course/${data.slug}`} className="block h-[180px] relative">
         <Image
-          src="https://images.unsplash.com/photo-1745500415839-503883982264?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8"
-          alt=""
+          src={data.img}
+          alt={data.title}
           width={300}
           height={200}
           className="w-full h-full object-cover rounded-lg"
           sizes="@media (min-width:640px) 300px, 100vw"
           priority
         />
-        {/* <span className="inline-block px-3 py-1 rounded-full absolute top-3 right-3 z-10 text-white font-medium bg-green-500 text-xs">
+        <span className="inline-block px-3 py-1 rounded-full absolute top-3 right-3 z-10 text-white font-medium bg-green-500 text-xs">
           New
-        </span> */}
+        </span>
       </Link>
       <div className="pt-4">
         <h3 className="font-bold text-lg mb-3">{data.title}</h3>

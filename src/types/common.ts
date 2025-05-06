@@ -1,0 +1,1 @@
+export type BadgeStatusVariant = 'default' | 'success' | 'warning' | 'danger';

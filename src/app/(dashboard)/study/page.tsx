@@ -1,15 +1,12 @@
-import { CourseGrid } from '@/components/common'
-import CourseItem from '@/components/course/CourseItem'
-import React from 'react'
+import { CourseGrid } from "@/components/common";
+import Heading from "@/components/common/Heading";
+import CourseItem from "@/components/course/CourseItem";
+import React from "react";
 
 const page = () => {
   return (
-    <CourseGrid>
-    <CourseItem></CourseItem>
-    <CourseItem></CourseItem>
-    <CourseItem></CourseItem>
-  </CourseGrid>
-  )
-}
+    <Heading>Khu vuc hoc tap</Heading>
+  );
+};
 
-export default page
+export default page;

@@ -3,12 +3,12 @@ import React from "react";
 
 const Heading = ({
   children,
-  className = "",
+  className,
 }: {
   children: React.ReactNode;
   className?: string;
 }) => {
-  return <h1 className={cn("font-bold text-2xl",className)}>{children}</h1>;
+  return <h1 className={cn("font-bold text-3xl",className)}>{children}</h1>;
 };
 
 export default Heading;
