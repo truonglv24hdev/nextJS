@@ -2,12 +2,15 @@ import Heading from "@/components/common/Heading";
 import UpdateCoursePage from "@/pages/update-course-container";
 import React from "react";
 
-const page = async ({ searchParams }: { searchParams: { slug: string } }) => {
+type SearchParams = Promise<{ [key: string]: string | string }>;
 
+const page = async (props: { searchParams: SearchParams }) => {
+  const searchParams = await props.searchParams;
+  const slug = searchParams.slug;
   return (
     <>
       <Heading className="mb-8">Update Course</Heading>
-      <UpdateCoursePage slug={searchParams.slug} />
+      <UpdateCoursePage params={Promise.resolve({ slug })} />
     </>
   );
 };

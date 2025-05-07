@@ -16,11 +16,34 @@ export async function getAllCourse(): Promise<ICourse[] | undefined> {
   }
 }
 
-export async function getCourseBySlug({ slug }: { slug: string }): Promise<ICourse | undefined> {
+export async function getCourseBySlug({
+  slug,
+}: {
+  slug: string;
+}): Promise<ICourse | undefined> {
   try {
     await connectDatabase();
 
     const findCourse = await Course.findOne({ slug });
+    return findCourse;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getLectureBySlug({
+  slug,
+}: {
+  slug: string;
+}): Promise<ICourse | undefined> {
+  try {
+    await connectDatabase();
+
+    const findCourse = await Course.findOne({ slug }).populate({
+      path: "lectures",
+      select: "title _id",
+      match: { _destroy: false },
+    });
     return findCourse;
   } catch (error) {
     console.log(error);
@@ -42,24 +65,20 @@ export async function createCourse(params: TCreateCourseParams) {
 }
 
 export async function updateCourse(params: TUpdateCourseParams) {
-  console.log('updateCourse ~ params:', params);
+  console.log("updateCourse ~ params:", params);
   try {
     await connectDatabase();
     const findCourse = await Course.findOne({ slug: params.slug });
 
     if (!findCourse) return;
-    await Course.findOneAndUpdate(
-      { slug: params.slug },
-      params.updateData,
-      {
-        new: true,
-      },
-    );
-    revalidatePath(params.path || '/');
+    await Course.findOneAndUpdate({ slug: params.slug }, params.updateData, {
+      new: true,
+    });
+    revalidatePath(params.path || "/");
 
     return {
       success: true,
-      message: 'Cập nhật khóa học thành công!',
+      message: "Cập nhật khóa học thành công!",
     };
   } catch (error) {
     console.log(error);

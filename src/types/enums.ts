@@ -1,4 +1,5 @@
 import { ICourse } from "@/database/course.model";
+import { ILecture } from "@/database/lecture.model";
 
 enum EUserStatus {
   ACTIVE = "ACTIVE",
@@ -56,6 +57,29 @@ export type TUpdateCourseParams = {
   slug: string;
   updateData: Partial<ICourse>;
   path?: string;
+};
+
+export type TCreateLecture = {
+  course: string;
+  title?: string;
+  order?: number;
+  path?: string;
+};
+
+export type TUpdateLecture = {
+  lectureId: string;
+  updateData: {
+    title?: string;
+    order?: string;
+    _destroy?: boolean;
+    path?: string;
+  };
+};
+
+export type TCourseUpdateParams = {
+  _id: string;
+  slug: string;
+  lectures: ILecture[];
 };
 
 export {

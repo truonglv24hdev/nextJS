@@ -1,16 +1,24 @@
 import { getCourseBySlug } from "../lib/actions/course.actions";
 import UpdateCourseContainer from "../components/course/CourseUpdate";
 
-export interface UpdateCoursePageProps {
-  slug: string;
+interface UpdateCoursePageProps {
+  params: Promise<{ slug: string }>;
 }
 
-async function UpdateCoursePage({ slug }: UpdateCoursePageProps) {
-  const foundCourse = await getCourseBySlug({
-    slug,
-  });
+async function UpdateCoursePage({ params }: UpdateCoursePageProps) {
+  // Await params to resolve the slug
+  const { slug } = await params;
+  if (!slug) {
+    return <div>Missing slug</div>;
+  }
 
-  if (!foundCourse) return null;
+  const foundCourse = await getCourseBySlug({ slug });
+
+  console.log(foundCourse);
+
+  if (!foundCourse) {
+    return <div>Course not found</div>;
+  }
 
   const plainCourse = JSON.parse(JSON.stringify(foundCourse));
 

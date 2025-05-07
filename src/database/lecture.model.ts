@@ -5,7 +5,8 @@ export interface ILecture extends Document {
   title: string;
   lesson: Schema.Types.ObjectId[];
   _destroy: boolean;
-  courses: Schema.Types.ObjectId;
+  order: number;
+  course: Schema.Types.ObjectId;
   createdAt: Date;
 }
 
@@ -21,9 +22,12 @@ const lectureSchema = new Schema<ILecture>(
         ref: "Lesson",
       },
     ],
-    courses: {
+    course: {
       type: Schema.Types.ObjectId,
       ref: "Course",
+    },
+    order: {
+      type: Number,
     },
     _destroy: {
       type: Boolean,
@@ -35,6 +39,7 @@ const lectureSchema = new Schema<ILecture>(
   }
 );
 
-const Lecture = mongoose.models["lecture"] || mongoose.model("lecture", lectureSchema);
+const Lecture =
+  mongoose.models["lecture"] || mongoose.model("lecture", lectureSchema);
 
 export default Lecture;
