@@ -1,5 +1,6 @@
 import { ICourse } from "@/database/course.model";
 import { ILecture } from "@/database/lecture.model";
+import { ILesson } from "@/database/lesson.model";
 
 enum EUserStatus {
   ACTIVE = "ACTIVE",
@@ -76,10 +77,18 @@ export type TUpdateLecture = {
   };
 };
 
-export type TCourseUpdateParams = {
-  _id: string;
-  slug: string;
-  lectures: ILecture[];
+export type TUpdateCourseLecture = {_id:string,title:string,lesson:ILesson[]}
+export interface TCourseUpdateParams extends Omit<ICourse, "lectures"> {
+  lectures: TUpdateCourseLecture[];
+}
+
+export type TCreateLesson = {
+  lecture: string;
+  course: string;
+  title?: string;
+  order?: number;
+  path?: string;
+  slug?: string;
 };
 
 export {

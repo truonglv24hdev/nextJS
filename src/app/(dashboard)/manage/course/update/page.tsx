@@ -1,5 +1,5 @@
 import Heading from "@/components/common/Heading";
-import UpdateCoursePage from "@/pages/update-course-container";
+import UpdateCoursePage from "@/pages_course/update-course-container";
 import React from "react";
 
 type SearchParams = Promise<{ [key: string]: string | string }>;

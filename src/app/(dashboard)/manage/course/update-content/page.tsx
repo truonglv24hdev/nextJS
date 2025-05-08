@@ -1,6 +1,6 @@
 import Heading from "@/components/common/Heading";
 import CourseUpdateContent from "@/components/course/CourseUpdateContent";
-import { getLectureBySlug } from "@/lib/actions/course.actions";
+import { getCourseBySlug } from "@/lib/actions/course.actions";
 import React from "react";
 
 type PageProps = {
@@ -16,7 +16,7 @@ const page = async ({ searchParams }: PageProps) => {
     return <div>Thiếu slug của khoá học</div>;
   }
 
-  const findCourse = await getLectureBySlug({ slug });
+  const findCourse = await getCourseBySlug({ slug });
 
   if (!findCourse) return <div>Không tìm thấy khóa học</div>;
 

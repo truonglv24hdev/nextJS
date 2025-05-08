@@ -6,7 +6,7 @@ export interface ILesson extends Document {
   title: string;
   slug: string;
   lecture: Schema.Types.ObjectId;
-  courses: Schema.Types.ObjectId;
+  course: Schema.Types.ObjectId;
   order: number;
   duration: number;
   type: ELessonType;
@@ -25,7 +25,6 @@ const lessonSchema = new Schema<ILesson>(
     slug: {
       type: String,
       slug: "title",
-      unique: true,
     },
     order: {
       type: Number,
@@ -46,16 +45,16 @@ const lessonSchema = new Schema<ILesson>(
     },
     lecture: {
       type: Schema.Types.ObjectId,
-      ref: "Lecture",
+      ref: "lecture",
     },
     type: {
       type: String,
       enum: Object.values(ELessonType),
       default: ELessonType.VIDEO,
     },
-    courses: {
+    course: {
       type: Schema.Types.ObjectId,
-      ref: "Course",
+      ref: "course",
     },
   },
   {

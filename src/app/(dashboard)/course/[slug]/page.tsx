@@ -15,9 +15,10 @@ import {
 
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
-  const data = await getCourseBySlug({ slug: slug });
-  if (!data) return <PageNotFound />;
-  if (data.status !== ECourseStatus.APPROVED) return <PageNotFound />;
+  const data = await getCourseBySlug({ slug: slug }).catch(() => null);
+  if (!data || data.status !== ECourseStatus.APPROVED) return <PageNotFound />;
+
+  const lectures = data.lectures || [];
   const videoId =
     data.intro_url && data.intro_url.includes("v=")
       ? data.intro_url.split("v=")[1]
@@ -28,15 +29,13 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
       <div>
         <div className="relative aspect-video mb-5">
           {data.intro_url ? (
-            <>
-              <iframe
-                width="916"
-                height="515"
-                src={`https://www.youtube.com/embed/${videoId}`}
-                title="[ That Girl ] Lyrics - Olly Murs"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              ></iframe>
-            </>
+            <iframe
+              width="916"
+              height="515"
+              src={`https://www.youtube.com/embed/${videoId}`}
+              title="Course Intro Video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            />
           ) : (
             data.img && (
               <Image
@@ -44,6 +43,7 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
                 alt={data.title || "Course image"}
                 fill
                 className="w-full h-full object-cover rounded-lg"
+                loading="lazy"
               />
             )
           )}
@@ -60,28 +60,58 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
             <BoxInfo title="Thoi gian hoc">100h45p</BoxInfo>
           </div>
         </BoxSection>
+        <BoxSection title="Noi dung khoa hoc">
+          <div className="flex flex-col gap-5">
+            {lectures.length ? (
+              lectures.map((lecture) => (
+                <Accordion key={lecture._id} type="single" collapsible>
+                  <AccordionItem value={lecture._id}>
+                    <AccordionTrigger>
+                      <div className="flex items-center gap-3 justify-between w-full pr-5">
+                        <div>{lecture.title}</div>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      Yes. It adheres to the WAI-ARIA design pattern.
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              ))
+            ) : (
+              <p>No lectures available</p>
+            )}
+          </div>
+        </BoxSection>
         <BoxSection title="Yeu cau">
-          {data.info.requirement.map((r, index) => (
-            <div key={index} className="mb-3 flex items-center gap-2">
-              <span className="flex-shrink-0 size-5 bg-red-400 text-white p-1 rounded flex items-center justify-center">
-                <IconCheck />
-              </span>
-              <span>{r}</span>
-            </div>
-          ))}
+          {data.info?.requirement?.length ? (
+            data.info.requirement.map((r, index) => (
+              <div key={index} className="mb-3 flex items-center gap-2">
+                <span className="flex-shrink-0 size-5 bg-red-400 text-white p-1 rounded flex items-center justify-center">
+                  <IconCheck />
+                </span>
+                <span>{r}</span>
+              </div>
+            ))
+          ) : (
+            <p>No requirements available</p>
+          )}
         </BoxSection>
         <BoxSection title="Loi ich">
-          {data.info.benefit.map((b, index) => (
-            <div key={index} className="mb-3 flex items-center gap-2">
-              <span className="flex-shrink-0 size-5 bg-red-400 text-white p-1 rounded flex items-center justify-center">
-                <IconCheck />
-              </span>
-              <span>{b}</span>
-            </div>
-          ))}
+          {data.info?.benefit?.length ? (
+            data.info.benefit.map((b, index) => (
+              <div key={index} className="mb-3 flex items-center gap-2">
+                <span className="flex-shrink-0 size-5 bg-red-400 text-white p-1 rounded flex items-center justify-center">
+                  <IconCheck />
+                </span>
+                <span>{b}</span>
+              </div>
+            ))
+          ) : (
+            <p>No benefits available</p>
+          )}
         </BoxSection>
         <BoxSection title="Q.A">
-          {data.info.qa.map((qa, index) => (
+          {data.info?.qa?.map((qa, index) => (
             <Accordion type="single" collapsible key={index}>
               <AccordionItem value={qa.question}>
                 <AccordionTrigger>{qa.question}</AccordionTrigger>
@@ -95,13 +125,15 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
         <div className="bg-gray-500 rounded-lg p-5">
           <div className="flex items-center gap-2 mb-3">
             <strong className="text-red-500 text-xl font-bold">
-              {data.price}
+              {data.price || "N/A"}
             </strong>
             <span className="text-blue-500 line-through text-sm">
-              {data.sale_price}
+              {data.sale_price || "N/A"}
             </span>
             <span className="ml-auto inline-block px-3 py-1 rounded-lg bg-green-500/10 font-semibold text-sm">
-              {Math.floor((data.price / data.sale_price) * 100)}%
+              {data.price && data.sale_price
+                ? Math.floor((data.price / data.sale_price) * 100) + "%"
+                : "No Discount"}
             </span>
           </div>
           <h3 className="font-bold mb-3 text-xl">Khoa hoc bao gom co</h3>
@@ -159,4 +191,5 @@ function BoxSection({
     </>
   );
 }
+
 export default page;

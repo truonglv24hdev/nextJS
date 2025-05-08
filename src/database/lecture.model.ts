@@ -19,12 +19,12 @@ const lectureSchema = new Schema<ILecture>(
     lesson: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Lesson",
+        ref: "lesson",
       },
     ],
     course: {
       type: Schema.Types.ObjectId,
-      ref: "Course",
+      ref: "course",
     },
     order: {
       type: Number,

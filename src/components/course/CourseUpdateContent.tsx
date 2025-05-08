@@ -1,6 +1,6 @@
 "use client";
 
-import React, { MouseEvent } from "react";
+import React, { MouseEvent, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -14,11 +14,13 @@ import { createLecture, updateLecture } from "@/lib/actions/lecture.actions";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { ILecture } from "@/database/lecture.model";
-import { TCourseUpdateParams } from "@/types/enums";
+import { TCourseUpdateParams, TUpdateCourseLecture } from "@/types/enums";
 import { useImmer } from "use-immer";
+import { cn } from "@/lib/utils";
+import { createLesson } from "@/lib/actions/lesson.action";
+import { ILesson } from "@/database/lesson.model";
 
 const CourseUpdateContent = ({ course }: { course: TCourseUpdateParams }) => {
-  console.log(course);
   const lectures = course.lectures;
   const handleNewLecture = async () => {
     try {
@@ -83,84 +85,128 @@ const CourseUpdateContent = ({ course }: { course: TCourseUpdateParams }) => {
         },
       });
       if (res?.success) {
-        toast.success("Xoa thanh cong");
+        toast.success("Cap nhap thanh cong");
+        setLectureIdEdit("");
+        setLectureEdit("");
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const [lectureEdit, setLectureEdit] = useImmer("");
-  const [lectureIndex, setLectureIndex] = useImmer(-1);
+  const handleAddNewLesson = async (lectureId: string, courseId: string) => {
+    try {
+      const res = await createLesson({
+        path: `manage/course/update-content?slug=${course.slug}`,
+        lecture: lectureId,
+        course: courseId,
+        title: "Tieu de bai hoc moi",
+        slug: `Tieu-de-bai-hoc-moi-${new Date()
+          .getTime()
+          .toString()
+          .slice(-3)}`,
+      });
+      if (res?.success) {
+        toast.success("Them thanh cong");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [lectureEdit, setLectureEdit] = useState("");
+  const [lectureIdEdit, setLectureIdEdit] = useState("");
 
   return (
     <div>
       <div className="flex flex-col gap-5">
-        {lectures.map((lecture: ILecture, index) => (
-          <Accordion type="single" collapsible key={lecture._id}>
-            <AccordionItem value="item-1">
-              <AccordionTrigger>
-                <div className="flex items-center gap-3 justify-between w-full pr-5">
-                  {index === lectureIndex ? (
-                    <>
-                      <div className="w-full">
-                        <Input
-                          placeholder="Ten chuong"
-                          defaultValue={lecture.title}
-                          onChange={(e) => {
-                            e.stopPropagation();
-                            setLectureEdit((draft) => {
-                              draft = e.target.value;
-                            });
-                          }}
-                        />
-                      </div>
-                      <div className="flex gap-2">
-                        <span
-                          className={commonClassName.action}
-                          onClick={e => handleUpdateLecture(e,lecture._id)}
-                        >
-                          <IconCheck />
-                        </span>
-                        <span
-                          className={commonClassName.action}
-                          onClick={(e) => {
-                            e.stopPropagation(), setLectureIndex(-1);
-                          }}
-                        >
-                          <IconCancel />
-                        </span>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div>{lecture.title}</div>
-                      <div className="flex gap-2">
-                        <span
-                          className={commonClassName.action}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setLectureIndex(index);
-                          }}
-                        >
-                          <IconEdit />
-                        </span>
-                        <span
-                          className={commonClassName.action}
-                          onClick={(e) => handleDeleteLecture(e, lecture._id)}
-                        >
-                          <IconDelete />
-                        </span>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </AccordionTrigger>
-              <AccordionContent>
-                Yes. It adheres to the WAI-ARIA design pattern.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+        {lectures.map((lecture: TUpdateCourseLecture) => (
+          <div key={lecture._id}>
+            <Accordion type="single" collapsible={!lectureIdEdit}>
+              <AccordionItem value={lecture._id}>
+                <AccordionTrigger>
+                  <div className="flex items-center gap-3 justify-between w-full pr-5">
+                    {lecture._id === lectureIdEdit ? (
+                      <>
+                        <div className="w-full">
+                          <Input
+                            placeholder="Ten chuong"
+                            defaultValue={lecture.title}
+                            onChange={(e) => {
+                              setLectureEdit(e.target.value);
+                            }}
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <span
+                            className={cn(
+                              commonClassName.action,
+                              "text-green-500"
+                            )}
+                            onClick={(e) => handleUpdateLecture(e, lecture._id)}
+                          >
+                            <IconCheck />
+                          </span>
+                          <span
+                            className={cn(
+                              commonClassName.action,
+                              "text-red-500"
+                            )}
+                            onClick={(e) => {
+                              e.stopPropagation(), setLectureIdEdit("");
+                            }}
+                          >
+                            <IconCancel />
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div>{lecture.title}</div>
+                        <div className="flex gap-2">
+                          <span
+                            className={commonClassName.action}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setLectureIdEdit(lecture._id);
+                            }}
+                          >
+                            <IconEdit />
+                          </span>
+                          <span
+                            className={commonClassName.action}
+                            onClick={(e) => handleDeleteLecture(e, lecture._id)}
+                          >
+                            <IconDelete />
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="border-none !bg-transparent">
+                  <div className="flex flex-col gap-5">
+                    {lecture.lesson.map((item: ILesson) => (
+                      <Accordion type="single" collapsible key={item._id}>
+                        <AccordionItem value={item._id}>
+                          <AccordionTrigger>{item.title}</AccordionTrigger>
+                          <AccordionContent>
+                            Yes. It adheres to the WAI-ARIA design pattern.
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+            <Button
+              onClick={() => handleAddNewLesson(lecture._id, course._id)}
+              className="mt-5 ml-auto w-fit block"
+            >
+              Them bai moi
+            </Button>
+          </div>
         ))}
       </div>
       <Button onClick={handleNewLecture} className="mt-5">
