@@ -17,8 +17,10 @@ import { ILecture } from "@/database/lecture.model";
 import { TCourseUpdateParams, TUpdateCourseLecture } from "@/types/enums";
 import { useImmer } from "use-immer";
 import { cn } from "@/lib/utils";
-import { createLesson } from "@/lib/actions/lesson.action";
+import { createLesson, updateLesson } from "@/lib/actions/lesson.action";
 import { ILesson } from "@/database/lesson.model";
+import slugify from "slugify";
+import LessonItemUpdate from "../lesson/LessonItemUpdate";
 
 const CourseUpdateContent = ({ course }: { course: TCourseUpdateParams }) => {
   const lectures = course.lectures;
@@ -114,8 +116,67 @@ const CourseUpdateContent = ({ course }: { course: TCourseUpdateParams }) => {
     }
   };
 
+  const handleUpdateLesson = async (
+    e: MouseEvent<HTMLSpanElement>,
+    lessonId: string
+  ) => {
+    e.stopPropagation();
+    try {
+      const res = await updateLesson({
+        lessonId,
+        updateData: {
+          slug: slugify(lessonEdit, { lower: true, locale: "vi", remove:/[*+~.()'"!:@]/g }),
+          title: lessonEdit,
+          path: `manage/course/update-content?slug=${course.slug}`,
+        },
+      });
+      if (res?.success) {
+        toast.success("Cap nhap thanh cong");
+        setLessonIdEdit("");
+        setLessonEdit("");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteLesson = async (
+    e: MouseEvent<HTMLSpanElement>,
+    lessonId: string
+  ) => {
+    e.stopPropagation();
+    try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const res = await updateLesson({
+            lessonId,
+            updateData: {
+              _destroy: true,
+              path: `manage/course/update-content?slug=${course.slug}`,
+            },
+          });
+          if (res?.success) {
+            toast.success("Xoa thanh cong");
+          }
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const [lectureEdit, setLectureEdit] = useState("");
+  const [lessonEdit, setLessonEdit] = useState("");
   const [lectureIdEdit, setLectureIdEdit] = useState("");
+  const [lessonIdEdit, setLessonIdEdit] = useState("");
 
   return (
     <div>
@@ -187,11 +248,79 @@ const CourseUpdateContent = ({ course }: { course: TCourseUpdateParams }) => {
                 <AccordionContent className="border-none !bg-transparent">
                   <div className="flex flex-col gap-5">
                     {lecture.lesson.map((item: ILesson) => (
-                      <Accordion type="single" collapsible key={item._id}>
+                      <Accordion
+                        type="single"
+                        collapsible={!lessonIdEdit}
+                        key={item._id}
+                      >
                         <AccordionItem value={item._id}>
-                          <AccordionTrigger>{item.title}</AccordionTrigger>
+                          <AccordionTrigger>
+                            <div className="flex items-center gap-3 justify-between w-full pr-5">
+                              {item._id === lessonIdEdit ? (
+                                <>
+                                  <div className="w-full">
+                                    <Input
+                                      placeholder="Ten bai hoc"
+                                      defaultValue={item.title}
+                                      onChange={(e) => {
+                                        setLessonEdit(e.target.value);
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="flex gap-2">
+                                    <span
+                                      className={cn(
+                                        commonClassName.action,
+                                        "text-green-500"
+                                      )}
+                                      onClick={(e) =>
+                                        handleUpdateLesson(e, item._id)
+                                      }
+                                    >
+                                      <IconCheck />
+                                    </span>
+                                    <span
+                                      className={cn(
+                                        commonClassName.action,
+                                        "text-red-500"
+                                      )}
+                                      onClick={(e) => {
+                                        e.stopPropagation(),
+                                          setLessonIdEdit("");
+                                      }}
+                                    >
+                                      <IconCancel />
+                                    </span>
+                                  </div>
+                                </>
+                              ) : (
+                                <>
+                                  <div>{item.title}</div>
+                                  <div className="flex gap-2">
+                                    <span
+                                      className={commonClassName.action}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setLessonIdEdit(item._id);
+                                      }}
+                                    >
+                                      <IconEdit />
+                                    </span>
+                                    <span
+                                      className={commonClassName.action}
+                                      onClick={(e) =>
+                                        handleDeleteLesson(e, item._id)
+                                      }
+                                    >
+                                      <IconDelete />
+                                    </span>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          </AccordionTrigger>
                           <AccordionContent>
-                            Yes. It adheres to the WAI-ARIA design pattern.
+                            <LessonItemUpdate lesson={item}></LessonItemUpdate>
                           </AccordionContent>
                         </AccordionItem>
                       </Accordion>

@@ -28,7 +28,7 @@ export async function updateLecture(params: TUpdateLecture) {
     await Lecture.findByIdAndUpdate(params.lectureId, params.updateData, {
       new: true,
     });
-    revalidatePath(params.updateData.path!);
+    revalidatePath(params.updateData.path || "");
 
     return {
       success: true,

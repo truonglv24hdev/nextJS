@@ -77,7 +77,25 @@ export type TUpdateLecture = {
   };
 };
 
-export type TUpdateCourseLecture = {_id:string,title:string,lesson:ILesson[]}
+export type TUpdateLesson = {
+  lessonId: string;
+  updateData: {
+    title?: string;
+    order?: number;
+    slug?: string;
+    _destroy?: boolean;
+    path?: string;
+    duration?: number;
+    video_url?: string;
+    content?: string;
+  };
+};
+
+export type TUpdateCourseLecture = {
+  _id: string;
+  title: string;
+  lesson: ILesson[];
+};
 export interface TCourseUpdateParams extends Omit<ICourse, "lectures"> {
   lectures: TUpdateCourseLecture[];
 }

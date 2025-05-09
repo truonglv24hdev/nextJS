@@ -3,7 +3,7 @@ import { IconCheck, IconPlay, IconStudy, IconUser } from "@/components/icon";
 import { Button } from "@/components/ui";
 import { courseLevelTitle } from "@/constants/course-constant";
 import { getCourseBySlug } from "@/lib/actions/course.actions";
-import { ECourseStatus } from "@/types/enums";
+import { ECourseStatus, TUpdateCourseLecture } from "@/types/enums";
 import Image from "next/image";
 import React from "react";
 import {
@@ -12,6 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import LessonItem from "@/components/lesson/LessonItem";
 
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
@@ -63,16 +64,20 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
         <BoxSection title="Noi dung khoa hoc">
           <div className="flex flex-col gap-5">
             {lectures.length ? (
-              lectures.map((lecture) => (
+              lectures.map((lecture: TUpdateCourseLecture) => (
                 <Accordion key={lecture._id} type="single" collapsible>
-                  <AccordionItem value={lecture._id}>
+                  <AccordionItem value={lecture._id.toString()}>
                     <AccordionTrigger>
                       <div className="flex items-center gap-3 justify-between w-full pr-5">
                         <div>{lecture.title}</div>
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent>
-                      Yes. It adheres to the WAI-ARIA design pattern.
+                    <AccordionContent className="!bg-transparent border-none p-0">
+                      <div className="flex flex-col gap-3">
+                        {lecture.lesson.map((item) => (
+                         <LessonItem lesson={item} key={item._id}></LessonItem>
+                        ))}
+                      </div>
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>

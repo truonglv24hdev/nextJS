@@ -32,6 +32,7 @@ const lessonSchema = new Schema<ILesson>(
     },
     duration: {
       type: Number,
+      default: 0,
     },
     content: {
       type: String,
