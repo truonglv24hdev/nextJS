@@ -52,7 +52,9 @@ export async function getLessonBySlug({
   try {
     await connectDatabase();
 
-    const lesson = await Lesson.findOne({ slug: slug, course: course });
+    const lesson = await Lesson.findOne({ slug: slug, course: course }).select(
+      "slug title video_url content"
+    );
 
     return JSON.parse(JSON.stringify(lesson));
   } catch (error) {

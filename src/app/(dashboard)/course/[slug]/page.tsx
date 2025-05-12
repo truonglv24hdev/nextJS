@@ -75,7 +75,10 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
                     <AccordionContent className="!bg-transparent border-none p-0">
                       <div className="flex flex-col gap-3">
                         {lecture.lesson.map((item) => (
-                         <LessonItem lesson={item} key={item._id}></LessonItem>
+                          <LessonItem
+                            lesson={{ ...item, course: item.course.toString() }}
+                            key={item._id}
+                          ></LessonItem>
                         ))}
                       </div>
                     </AccordionContent>

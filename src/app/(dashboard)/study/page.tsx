@@ -1,11 +1,19 @@
-import { CourseGrid } from "@/components/common";
 import Heading from "@/components/common/Heading";
-import CourseItem from "@/components/course/CourseItem";
+import { getUserCourses } from "@/lib/actions/user.actions";
 import React from "react";
+import StudyCourse from "./StudyCourse";
 
-const page = () => {
+export const dynamic = "force-dynamic";
+
+const page = async () => {
+  const courses = await getUserCourses();
   return (
-    <Heading>Khu vuc hoc tap</Heading>
+    <>
+      <Heading>Khu vuc hoc tap</Heading>
+      <StudyCourse
+        courses={courses ? JSON.parse(JSON.stringify(courses)) : []}
+      ></StudyCourse>
+    </>
   );
 };
 

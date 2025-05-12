@@ -109,6 +109,13 @@ export type TCreateLesson = {
   slug?: string;
 };
 
+export type TCreateHistory = {
+  course: string;
+  lesson: string;
+  checked: boolean | string;
+  path: string;
+};
+
 export {
   EUserStatus,
   EUserRole,
