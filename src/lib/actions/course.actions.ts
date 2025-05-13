@@ -1,8 +1,10 @@
 "use server";
 
 import {
+  ECourseStatus,
   TCourseUpdateParams,
   TCreateCourseParams,
+  TGetAllCourseParams,
   TUpdateCourseParams,
 } from "@/types/enums";
 import { connectDatabase } from "../mongoose";
@@ -10,12 +12,26 @@ import Course, { ICourse } from "@/database/course.model";
 import { revalidatePath } from "next/cache";
 import Lecture from "@/database/lecture.model";
 import Lesson from "@/database/lesson.model";
+import { FilterQuery } from "mongoose";
 
-export async function getAllCourse(): Promise<ICourse[] | undefined> {
+export async function getAllCourse(
+  params: TGetAllCourseParams
+): Promise<ICourse[] | undefined> {
   try {
     await connectDatabase();
+    const { page = 1, limit = 10, search, status } = params;
+    console.log(status);
+    const skip = (page - 1) * limit;
+    const query: FilterQuery<typeof Course> = {};
+    if (search) {
+      query.$or = [{ title: { $regex: search, $options: "i" } }];
+    }
 
-    const courses = await Course.find();
+    query.status = status || ECourseStatus.APPROVED;
+
+    const courses = await Course.find(query).skip(skip).limit(limit).sort({
+      createdAt: -1,
+    });
     return courses;
   } catch (error) {
     console.log(error);
@@ -85,7 +101,6 @@ export async function createCourse(params: TCreateCourseParams) {
 }
 
 export async function updateCourse(params: TUpdateCourseParams) {
-  console.log("updateCourse ~ params:", params);
   try {
     await connectDatabase();
     const findCourse = await Course.findOne({ slug: params.slug });

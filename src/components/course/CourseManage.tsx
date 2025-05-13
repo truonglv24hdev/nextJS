@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -22,6 +22,15 @@ import {
   IconArrowRight,
   IconPlus,
 } from "../icon";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Link from "next/link";
 import { ICourse } from "@/database/course.model";
 import Swal from "sweetalert2";
@@ -29,8 +38,24 @@ import { updateCourse } from "@/lib/actions/course.actions";
 import { ECourseStatus } from "@/types/enums";
 import { toast } from "react-toastify";
 import { Input } from "../ui";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { debounce } from "lodash";
 
 const CourseManage = ({ courses }: { courses: ICourse[] }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+
   const handleDeleteCourse = (slug: string) => {
     Swal.fire({
       title: "Are you sure?",
@@ -56,31 +81,52 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
     try {
       Swal.fire({
         title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        text: "Cap nhat trang thai",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, change it!",
+        confirmButtonText: "Cap nhat",
+        cancelButtonText: "Huy",
       }).then(async (result) => {
         if (result.isConfirmed) {
           await updateCourse({
             slug,
             updateData: {
-              status: ECourseStatus.PENDING
-                ? ECourseStatus.APPROVED
-                : ECourseStatus.PENDING,
+              status:
+                status === ECourseStatus.PENDING
+                  ? ECourseStatus.APPROVED
+                  : ECourseStatus.PENDING,
               _destroy: false,
             },
             path: "/manage/course",
           });
           toast.success("Cap nhat trang thai thanh cong");
+          router.push(`${pathname}?${createQueryString("status", "")}`);
         }
       });
     } catch (error) {
       console.log(error);
     }
   };
+  const [page, setPage] = useState(1);
+  const handleSearchCourse = debounce(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      router.push(`${pathname}?${createQueryString("search", e.target.value)}`);
+    },
+    500
+  );
+  const handleSelectStatus = (status: ECourseStatus) => {
+    router.push(`${pathname}?${createQueryString("status", status)}`);
+  };
+  const handleChangePage = (type: "prev" | "next") => {
+    if (type === "prev" && page === 1) return;
+    if (type === "prev") setPage((page) => page - 1);
+    if (type === "next") setPage((page) => page + 1);
+  };
+  useEffect(() => {
+    router.push(`${pathname}?${createQueryString("page", page.toString())}`);
+  }, [page]);
   return (
     <div>
       <Link
@@ -91,8 +137,31 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
       </Link>
       <div className="flex items-center justify-between mb-5">
         <Heading className="mb-10">Quan li khoa hoc</Heading>
-        <div className="w-[300px]">
-          <Input placeholder="Tim kiem khoa hoc..." />
+        <div className="flex gap-3">
+          <div className="w-[300px]">
+            <Input
+              placeholder="Tim kiem khoa hoc..."
+              onChange={handleSearchCourse}
+            />
+          </div>
+          <Select
+            onValueChange={(value) =>
+              handleSelectStatus(value as ECourseStatus)
+            }
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="chon trang thai" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {courseStatus.map((status) => (
+                  <SelectItem value={status.value} key={status.value}>
+                    {status.title}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <Table>
@@ -181,10 +250,16 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
         </TableBody>
       </Table>
       <div className="flex justify-end gap-3 mt-5">
-        <button className={commonClassName.paginationButton}>
+        <button
+          className={commonClassName.paginationButton}
+          onClick={() => handleChangePage("prev")}
+        >
           <IconArrowLeft />
         </button>
-        <button className={commonClassName.paginationButton}>
+        <button
+          className={commonClassName.paginationButton}
+          onClick={() => handleChangePage("next")}
+        >
           <IconArrowRight />
         </button>
       </div>

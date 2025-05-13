@@ -13,17 +13,23 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import LessonItem from "@/components/lesson/LessonItem";
+import { auth } from "@clerk/nextjs/server";
+import { getUserInfo } from "@/lib/actions/user.actions";
+import ButtonBuyCourse from "./ButtonBuyCourse";
 
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
   const data = await getCourseBySlug({ slug: slug }).catch(() => null);
   if (!data || data.status !== ECourseStatus.APPROVED) return <PageNotFound />;
-
+  const { userId } = await auth();
+  const findUser = await getUserInfo({ userId: userId || "" });
   const lectures = data.lectures || [];
   const videoId =
     data.intro_url && data.intro_url.includes("v=")
       ? data.intro_url.split("v=")[1]
       : null;
+
+  const handleBuyCourse = () => {};
 
   return (
     <div className="grid lg:grid-cols-[2fr_1fr] gap-10 min-h-screen">
@@ -132,10 +138,10 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
       <div>
         <div className="bg-gray-500 rounded-lg p-5">
           <div className="flex items-center gap-2 mb-3">
-            <strong className="text-red-500 text-xl font-bold">
+            <strong className="text-green-500 text-xl font-bold">
               {data.price || "N/A"}
             </strong>
-            <span className="text-blue-500 line-through text-sm">
+            <span className="text-red-500 line-through text-sm">
               {data.sale_price || "N/A"}
             </span>
             <span className="ml-auto inline-block px-3 py-1 rounded-lg bg-green-500/10 font-semibold text-sm">
@@ -163,7 +169,11 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
               <span>Tai Lieu Kem Theo</span>
             </li>
           </ul>
-          <Button className="w-full">Mua khoa hoc</Button>
+          <ButtonBuyCourse
+            user={JSON.parse(JSON.stringify(findUser))}
+            courseId={JSON.parse(JSON.stringify(data._id))}
+            amount={data.price}
+          ></ButtonBuyCourse>
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { getAllCourse } from "@/lib/actions/course.actions";
 import React from "react";
 
 const page = async ({}) => {
-  const courses = (await getAllCourse()) || [];
+  const courses = (await getAllCourse({})) || [];
   return (
     <div>
       <Heading> Khám phá</Heading>

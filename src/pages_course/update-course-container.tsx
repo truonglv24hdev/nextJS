@@ -6,15 +6,12 @@ interface UpdateCoursePageProps {
 }
 
 async function UpdateCoursePage({ params }: UpdateCoursePageProps) {
-  // Await params to resolve the slug
   const { slug } = await params;
   if (!slug) {
     return <div>Missing slug</div>;
   }
 
   const foundCourse = await getCourseBySlug({ slug });
-
-  console.log(foundCourse);
 
   if (!foundCourse) {
     return <div>Course not found</div>;

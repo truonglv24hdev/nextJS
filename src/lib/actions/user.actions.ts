@@ -3,7 +3,7 @@
 import User from "@/database/user.model";
 import { IUser } from "@/database/user.model";
 import { connectDatabase } from "../mongoose";
-import { TCreateUserParams } from "@/types/enums";
+import { ECourseStatus, TCreateUserParams } from "@/types/enums";
 import { auth } from "@clerk/nextjs/server";
 import Course, { ICourse } from "@/database/course.model";
 
@@ -39,6 +39,9 @@ export async function getUserCourses(): Promise<ICourse[] | undefined | null> {
     const findUser = await User.findOne({ clerkId: userId }).populate({
       path: "courses",
       model: Course,
+      match: {
+        status: ECourseStatus.APPROVED,
+      },
     });
     if (!findUser) return [];
     return findUser.courses;

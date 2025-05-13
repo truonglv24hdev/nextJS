@@ -1,9 +1,9 @@
-import React from 'react'
+import OrderManagePage from "@/components/order/OrderManage";
+import { getOrders } from "@/lib/actions/order.action";
 
-const page = () => {
-  return (
-    <div>Manage Order</div>
-  )
-}
+const page = async () => {
+  const orders = await getOrders();
+  return <OrderManagePage orders={orders}></OrderManagePage>;
+};
 
-export default page
+export default page;

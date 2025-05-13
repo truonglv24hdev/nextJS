@@ -116,6 +116,29 @@ export type TCreateHistory = {
   path: string;
 };
 
+export type TGetAllCourseParams = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+};
+
+enum EOrderStatus {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+  CANCELED = "CANCELED",
+}
+
+export type TCreateOrderParams ={
+  code: string,
+  course: string,
+  user: string,
+  total?:number
+  amount?:number
+  discount?:number
+  coupon?:number
+}
+
 export {
   EUserStatus,
   EUserRole,
@@ -124,4 +147,5 @@ export {
   ELessonType,
   RatingStatus,
   CouponType,
+  EOrderStatus,
 };

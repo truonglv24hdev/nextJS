@@ -16,6 +16,7 @@ import { getHistory } from "@/lib/actions/history.action";
 import { auth } from "@clerk/nextjs/server";
 import { getUserInfo } from "@/lib/actions/user.actions";
 import LessonSaveUrl from "@/components/lesson/LessonSaveUrl";
+import VideoPlayer from "./VideoPlayer";
 
 type PageProps = {
   params: Promise<{ course: string }>;
@@ -39,7 +40,11 @@ const page = async ({ params, searchParams }: PageProps) => {
   const courseId = findCourse._id.toString();
   const lectures = findCourse.lectures;
 
-  if (!findUser.courses.includes(courseId as any) && findUser.role !== EUserRole.USER) return <PageNotFound />;
+  if (
+    !findUser.courses.includes(courseId as any) &&
+    findUser.role !== EUserRole.USER
+  )
+    return <PageNotFound />;
 
   const lessonDetail = await getLessonBySlug({
     slug,
@@ -65,14 +70,14 @@ const page = async ({ params, searchParams }: PageProps) => {
 
   return (
     <div className="grid grid-cols-[2fr_1fr] gap-10 min-h-screen items-start">
-      <LessonSaveUrl url={`/${course}/lesson?slug=${slug}`} course={course}></LessonSaveUrl>
-      <div> 
-        <div className="relative mb-5 aspect-video">
-          <iframe
-            className="w-full h-full object-fill"
-            src={`https://www.youtube.com/embed/${videoId}`}
-          ></iframe>
-        </div>
+      <LessonSaveUrl
+        url={`/${course}/lesson?slug=${slug}`}
+        course={course}
+      ></LessonSaveUrl>
+      <div>
+        <VideoPlayer
+          nextLesson={`/${course}/lesson?slug=${nextLesson?.slug}`}
+        />
         <div className="flex items-center justify-between mb-5">
           <LessonNavigation
             nextLesson={nextLesson}
