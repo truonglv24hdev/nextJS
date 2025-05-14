@@ -3,6 +3,7 @@ import { Button } from "@/components/ui";
 import { IUser } from "@/database/user.model";
 import { createOrderCourse } from "@/lib/actions/order.action";
 import { createOrderCode } from "@/utils";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "react-toastify";
 
@@ -15,6 +16,8 @@ const ButtonBuyCourse = ({
   amount: number;
   courseId: string;
 }) => {
+  const router = useRouter();
+
   const handleBuyCourse = async () => {
     if (!user?.username) {
       toast.error("Dang nhat de mua khoa hoc");
@@ -27,6 +30,9 @@ const ButtonBuyCourse = ({
       total: amount,
       amount: amount,
     });
+    if (newOrder.code) {
+      router.push(`/order/${newOrder.code}`);
+    }
   };
   return (
     <Button className="w-full" onClick={handleBuyCourse}>

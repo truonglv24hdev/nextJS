@@ -4,7 +4,7 @@ import { IconPlay } from "../icon";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "../ui";
-import { createHistory } from "@/lib/actions/history.action";
+import { createHistory } from "@/lib/actions/history.actions";
 
 const LessonItem = ({
   lesson,

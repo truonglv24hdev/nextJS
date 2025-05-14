@@ -1,6 +1,6 @@
 import React, { ComponentProps } from "react";
 
-const IconComment = (props: ComponentProps<"svg">) => {
+const IconCost = (props: ComponentProps<"svg">) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -13,10 +13,10 @@ const IconComment = (props: ComponentProps<"svg">) => {
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z"
+        d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
       />
     </svg>
   );
 };
 
-export default IconComment;
+export default IconCost;

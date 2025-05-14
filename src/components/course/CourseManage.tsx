@@ -16,7 +16,6 @@ import {
   IconDelete,
   IconEdit,
   IconEye,
-  IconPlay,
   IconStudy,
   IconArrowLeft,
   IconArrowRight,
@@ -27,7 +26,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";

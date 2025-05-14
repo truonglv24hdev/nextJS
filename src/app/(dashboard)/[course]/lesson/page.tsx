@@ -1,6 +1,6 @@
 import PageNotFound from "@/app/not-found";
 import { getCourseBySlug } from "@/lib/actions/course.actions";
-import { findAllLesson, getLessonBySlug } from "@/lib/actions/lesson.action";
+import { findAllLesson, getLessonBySlug } from "@/lib/actions/lesson.actions";
 import React from "react";
 import LessonNavigation from "./LessonNavigation";
 import { EUserRole, TUpdateCourseLecture } from "@/types/enums";
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui";
 import LessonItem from "@/components/lesson/LessonItem";
 import Heading from "@/components/common/Heading";
-import { getHistory } from "@/lib/actions/history.action";
+import { getHistory } from "@/lib/actions/history.actions";
 import { auth } from "@clerk/nextjs/server";
 import { getUserInfo } from "@/lib/actions/user.actions";
 import LessonSaveUrl from "@/components/lesson/LessonSaveUrl";

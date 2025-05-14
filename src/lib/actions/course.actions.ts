@@ -4,7 +4,7 @@ import {
   ECourseStatus,
   TCourseUpdateParams,
   TCreateCourseParams,
-  TGetAllCourseParams,
+  TGetAllParams,
   TUpdateCourseParams,
 } from "@/types/enums";
 import { connectDatabase } from "../mongoose";
@@ -15,19 +15,20 @@ import Lesson from "@/database/lesson.model";
 import { FilterQuery } from "mongoose";
 
 export async function getAllCourse(
-  params: TGetAllCourseParams
+  params: TGetAllParams
 ): Promise<ICourse[] | undefined> {
   try {
     await connectDatabase();
     const { page = 1, limit = 10, search, status } = params;
-    console.log(status);
     const skip = (page - 1) * limit;
     const query: FilterQuery<typeof Course> = {};
     if (search) {
       query.$or = [{ title: { $regex: search, $options: "i" } }];
     }
 
-    query.status = status || ECourseStatus.APPROVED;
+    if (status) {
+      query.status = status || ECourseStatus.APPROVED;
+    }
 
     const courses = await Course.find(query).skip(skip).limit(limit).sort({
       createdAt: -1,

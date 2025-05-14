@@ -116,7 +116,7 @@ export type TCreateHistory = {
   path: string;
 };
 
-export type TGetAllCourseParams = {
+export type TGetAllParams = {
   page?: number;
   limit?: number;
   search?: string;
@@ -129,15 +129,15 @@ enum EOrderStatus {
   CANCELED = "CANCELED",
 }
 
-export type TCreateOrderParams ={
-  code: string,
-  course: string,
-  user: string,
-  total?:number
-  amount?:number
-  discount?:number
-  coupon?:number
-}
+export type TCreateOrderParams = {
+  code: string;
+  course: string;
+  user: string;
+  total?: number;
+  amount?: number;
+  discount?: number;
+  coupon?: number;
+};
 
 export {
   EUserStatus,

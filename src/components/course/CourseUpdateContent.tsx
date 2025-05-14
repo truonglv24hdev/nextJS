@@ -17,7 +17,7 @@ import { ILecture } from "@/database/lecture.model";
 import { TCourseUpdateParams, TUpdateCourseLecture } from "@/types/enums";
 import { useImmer } from "use-immer";
 import { cn } from "@/lib/utils";
-import { createLesson, updateLesson } from "@/lib/actions/lesson.action";
+import { createLesson, updateLesson } from "@/lib/actions/lesson.actions";
 import { ILesson } from "@/database/lesson.model";
 import slugify from "slugify";
 import LessonItemUpdate from "../lesson/LessonItemUpdate";

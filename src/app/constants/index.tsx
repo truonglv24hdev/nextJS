@@ -3,7 +3,7 @@ import {
   IconExplore,
   IconStudy,
   IconUser,
-  IconComment,
+  IconCost,
   IconOrder,
 } from "@/components/icon";
 import React from "react";
@@ -31,9 +31,9 @@ export const menuItems: MenuItems[] = [
     icon: <IconUser className="size-5" />,
   },
   {
-    url: "/manage/comment",
-    title: "Quản lí bình luận",
-    icon: <IconComment className="size-5" />,
+    url: "/manage/coupon",
+    title: "Quản lí khuyến mãi",
+    icon: <IconCost className="size-5" />,
   },
   {
     url: "/manage/order",
