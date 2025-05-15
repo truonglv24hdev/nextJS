@@ -1,5 +1,4 @@
 "use server";
-
 import {
   ECourseStatus,
   TCourseUpdateParams,
@@ -33,7 +32,7 @@ export async function getAllCourse(
     const courses = await Course.find(query).skip(skip).limit(limit).sort({
       createdAt: -1,
     });
-    return courses;
+    return JSON.parse(JSON.stringify(courses));
   } catch (error) {
     console.log(error);
   }

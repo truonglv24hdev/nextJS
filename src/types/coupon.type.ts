@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export type CouponCreateFormValues = z.infer<typeof couponCreateSchema>;
 
-import { CouponType } from "@/types/enums";
+import { ECouponType } from "@/types/enums";
 
 export const couponCreateSchema = z.object({
   title: z
@@ -20,7 +20,23 @@ export const couponCreateSchema = z.object({
   end_date: z.string().optional(),
   active: z.boolean().optional(),
   value: z.string().optional(),
-  type: z.enum([CouponType.AMOUNT, CouponType.PERCENT]),
+  type: z.enum([ECouponType.AMOUNT, ECouponType.PERCENT]),
   courses: z.array(z.string()).optional(),
   limit: z.number().optional(),
 });
+
+export type CreateCouponParams = {
+  title: string;
+  code: string;
+  type: ECouponType;
+  value?: number;
+  start_date?: Date;
+  end_date?: Date;
+  active?: boolean;
+  limit?: number;
+  courses?: string[];
+};
+export type UpdateCouponParams = {
+  _id: string;
+  updateData: Partial<CreateCouponParams>;
+};

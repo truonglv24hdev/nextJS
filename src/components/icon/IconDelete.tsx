@@ -1,6 +1,6 @@
 import { ComponentProps } from "react";
 
-const IconAdd = (props: ComponentProps<"svg">) => {
+const IconDelete = (props: ComponentProps<"svg">) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,4 +19,4 @@ const IconAdd = (props: ComponentProps<"svg">) => {
   );
 };
 
-export default IconAdd;
+export default IconDelete;

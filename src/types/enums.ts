@@ -1,5 +1,4 @@
 import { ICourse } from "@/database/course.model";
-import { ILecture } from "@/database/lecture.model";
 import { ILesson } from "@/database/lesson.model";
 
 enum EUserStatus {
@@ -36,7 +35,7 @@ enum RatingStatus {
   UNACTIVE = "UNACTIVE",
 }
 
-enum CouponType {
+enum ECouponType {
   PERCENT = "PERCENT",
   AMOUNT = "AMOUNT",
 }
@@ -146,6 +145,6 @@ export {
   ECourseLevels,
   ELessonType,
   RatingStatus,
-  CouponType,
+  ECouponType,
   EOrderStatus,
 };

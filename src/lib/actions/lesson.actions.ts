@@ -1,6 +1,5 @@
 "use server";
-
-import { TCreateLesson, TUpdateLecture, TUpdateLesson } from "@/types/enums";
+import { TCreateLesson, TUpdateLesson } from "@/types/enums";
 import { connectDatabase } from "../mongoose";
 import Course from "@/database/course.model";
 import Lecture from "@/database/lecture.model";
@@ -9,7 +8,6 @@ import Lesson, { ILesson } from "@/database/lesson.model";
 
 export async function createLesson(params: TCreateLesson) {
   try {
-    console.log(params);
     await connectDatabase();
     const findCourse = await Course.findById(params.course);
     if (!findCourse) return;

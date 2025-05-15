@@ -29,8 +29,6 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
       ? data.intro_url.split("v=")[1]
       : null;
 
-  console.log(data);
-
   return (
     <div className="grid lg:grid-cols-[2fr_1fr] gap-10 min-h-screen">
       <div>
