@@ -17,11 +17,11 @@ export const couponStatuses = [
   {
     title: "Đang kích hoạt",
     className: "text-green-500 bg-green-500/10",
-    value: true,
+    active: true,
   },
   {
     title: "Chưa kích hoạt",
     className: "text-red-500 bg-red-500/10",
-    value: false,
+    active: false,
   },
 ];

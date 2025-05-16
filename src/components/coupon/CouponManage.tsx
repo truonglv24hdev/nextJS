@@ -10,12 +10,18 @@ import {
 } from "@/components/ui";
 import Heading from "../common/Heading";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { debounce } from "lodash";
 import Link from "next/link";
-import { IconCheck, IconDelete, IconEdit, IconPlus } from "../icon";
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconDelete,
+  IconEdit,
+  IconPlus,
+} from "../icon";
 import { ICoupon } from "@/database/coupon.model";
-import { ECouponType } from "@/types/enums";
+import { ECouponType, ECourseStatus } from "@/types/enums";
 import { cn } from "@/lib/utils";
 import { commonClassName } from "@/constants/course-constant";
 import { couponStatuses } from "@/constants/coupon-constant";
@@ -44,6 +50,8 @@ const CouponManagePage = ({ coupons }: { coupons: ICoupon[] }) => {
     500
   );
 
+  const [page, setPage] = useState(1);
+
   const handleDeleteCoupon = async (code: string) => {
     try {
       Swal.fire({
@@ -65,6 +73,19 @@ const CouponManagePage = ({ coupons }: { coupons: ICoupon[] }) => {
       console.log(error);
     }
   };
+
+  const handleSelectStatus = (status: ECourseStatus) => {
+    router.push(`${pathname}?${createQueryString("status", status)}`);
+  };
+
+  const handleChangePage = (type: "prev" | "next") => {
+    if (type === "prev" && page === 1) return;
+    if (type === "prev") setPage((page) => page - 1);
+    if (type === "next") setPage((page) => page + 1);
+  };
+  useEffect(() => {
+    router.push(`${pathname}?${createQueryString("page", page.toString())}`);
+  }, [page]);
 
   return (
     <div>
@@ -122,13 +143,13 @@ const CouponManagePage = ({ coupons }: { coupons: ICoupon[] }) => {
                     className={cn(
                       commonClassName.status,
                       couponStatuses.find(
-                        (item) => item.value === coupon.active
+                        (item) => item.active === coupon.active
                       )?.className
                     )}
                   >
                     {
                       couponStatuses.find(
-                        (item) => item.value === coupon.active
+                        (item) => item.active === coupon.active
                       )?.title
                     }
                   </span>
@@ -153,6 +174,20 @@ const CouponManagePage = ({ coupons }: { coupons: ICoupon[] }) => {
             ))}
         </TableBody>
       </Table>
+      <div className="flex justify-end gap-3 mt-5">
+        <button
+          className={commonClassName.paginationButton}
+          onClick={() => handleChangePage("prev")}
+        >
+          <IconArrowLeft />
+        </button>
+        <button
+          className={commonClassName.paginationButton}
+          onClick={() => handleChangePage("next")}
+        >
+          <IconArrowRight />
+        </button>
+      </div>
     </div>
   );
 };

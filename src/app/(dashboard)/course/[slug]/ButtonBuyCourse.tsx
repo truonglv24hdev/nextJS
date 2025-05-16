@@ -11,10 +11,12 @@ const ButtonBuyCourse = ({
   user,
   courseId,
   amount,
+  coupon,
 }: {
   user: IUser | null | undefined;
   amount: number;
   courseId: string;
+  coupon: string;
 }) => {
   const router = useRouter();
 
@@ -29,6 +31,7 @@ const ButtonBuyCourse = ({
       user: user._id as string,
       total: amount,
       amount: amount,
+      coupon
     });
     if (newOrder.code) {
       router.push(`/order/${newOrder.code}`);

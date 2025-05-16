@@ -60,8 +60,6 @@ const page = async ({ params, searchParams }: PageProps) => {
   const nextLesson = lessonsList?.[currentLesson + 1];
   const prevLesson = lessonsList?.[currentLesson - 1];
 
-  const videoId = lessonDetail.video_url?.split("v=").at(-1);
-
   if (!course || !slug) return <PageNotFound />;
 
   const histories = await getHistory({ course: findCourse._id });

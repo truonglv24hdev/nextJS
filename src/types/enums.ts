@@ -135,7 +135,7 @@ export type TCreateOrderParams = {
   total?: number;
   amount?: number;
   discount?: number;
-  coupon?: number;
+  coupon?: string;
 };
 
 export {

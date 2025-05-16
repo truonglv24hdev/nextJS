@@ -6,11 +6,19 @@ import Course from "@/database/course.model";
 import User from "@/database/user.model";
 import { FilterQuery } from "mongoose";
 import { revalidatePath } from "next/cache";
+import Coupon from "@/database/coupon.model";
 
 export async function createOrderCourse(params: TCreateOrderParams) {
   try {
     await connectDatabase();
     const newOrder = await Order.create(params);
+
+    if (params.coupon) {
+      await Coupon.findByIdAndUpdate(params.coupon, {
+        $inc: { used: 1 },
+      });
+    }
+
     return JSON.parse(JSON.stringify(newOrder));
   } catch (error) {
     console.log(error);

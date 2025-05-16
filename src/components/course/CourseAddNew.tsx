@@ -26,7 +26,6 @@ const formSchema = z.object({
 
 function CourseAddNew() {
   const router = useRouter()
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,7 +34,6 @@ function CourseAddNew() {
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const data = {

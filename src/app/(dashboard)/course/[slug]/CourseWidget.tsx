@@ -1,9 +1,10 @@
 "use client";
 import { IconPlay, IconStudy, IconUser } from "@/components/icon";
-import React from "react";
+import React, { useState } from "react";
 import ButtonBuyCourse from "./ButtonBuyCourse";
 import Link from "next/link";
 import { Button } from "@/components/ui";
+import CouponForm from "@/app/page_coupon/coupon-form";
 
 const CourseWidget = ({
   data,
@@ -14,12 +15,14 @@ const CourseWidget = ({
   findUser: any;
   userCourse?: string[] | undefined;
 }) => {
+  const [price, setPrice] = useState<number>(data.price);
+  const [coupon, setCoupon] = useState("");
   return (
     <div>
       <div className="bg-gray-500 rounded-lg p-5">
         <div className="flex items-center gap-2 mb-3">
           <strong className="text-green-500 text-xl font-bold">
-            {data.price || "N/A"}
+            {price.toLocaleString("vi-VI") || "N/A"}
           </strong>
           <span className="text-red-500 line-through text-sm">
             {data.sale_price || "N/A"}
@@ -50,7 +53,7 @@ const CourseWidget = ({
           </li>
         </ul>
         <div>
-          {userCourse ? (
+          {userCourse && userCourse.length > 0 ? (
             <Link href={`/study`}>
               <Button className="w-full">Học khóa học</Button>
             </Link>
@@ -58,10 +61,17 @@ const CourseWidget = ({
             <ButtonBuyCourse
               user={JSON.parse(JSON.stringify(findUser))}
               courseId={JSON.parse(JSON.stringify(data._id))}
-              amount={data.price}
+              amount={price}
+              coupon={coupon}
             ></ButtonBuyCourse>
           )}
         </div>
+        <CouponForm
+          courseId={data ? JSON.parse(JSON.stringify(data._id)) : null}
+          originalPrice={data.price}
+          setCouponId={setCoupon}
+          setPrice={setPrice}
+        />
       </div>
     </div>
   );
